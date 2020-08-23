@@ -1,0 +1,14 @@
+export GROWFS_STATUS=/growfs_done
+export GROWFS_DISK=sd0
+export GROWFS_PART=/dev/sd0a
+if [[ ! -f $GROWFS_STATUS ]]; then
+	old_pwd=$(pwd)
+	if [[ ! -f $GROWFS_PART ]]; then
+		cd /dev
+		sh ./MAKEDEV $GROWFS_DISK
+	fi
+	fdisk -iy $GROWFS_DISK
+	print 'b\n\n*\nw\n' | disklabel -E $GROWFS_DISK
+	echo "done" > $GROWFS_STATUS
+	cd $old_pwd
+fi
