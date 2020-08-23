@@ -4,9 +4,9 @@
 a small helper script to create a bootable openbsd disk image
 with customized ramdisk kernel which contains:
 
-	- a small profile hack to reinitialize disk at boot
-	- an auto_install.conf file
-	- a siteXX.tgz package for initial python installation
+- a small profile hack to reinitialize disk at boot
+- an auto_install.conf file
+- a siteXX.tgz package for initial python installation
 
 the goal of this project is to create a a small openbsd boot medium
 which can be copied to a host's root disk from a rescue system to
