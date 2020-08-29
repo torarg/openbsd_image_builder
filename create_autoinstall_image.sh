@@ -2,7 +2,7 @@
 
 USAGE="./build_autoinstall_image.sh VERSION SHORT_VERSION ARCH"
 
-[[ $# != 2 ]] && echo $USAGE && exit 1
+[[ $# != 3 ]] && echo $USAGE && exit 1
 
 
 MIRROR=ftp.hostserver.de
