@@ -1,13 +1,14 @@
 #!/bin/ksh
 
-USAGE="./build_autoinstall_image.sh VERSION ARCH"
+USAGE="./build_autoinstall_image.sh VERSION SHORT_VERSION ARCH"
+
 [[ $# != 2 ]] && echo $USAGE && exit 1
 
 
 MIRROR=ftp.hostserver.de
 VERSION="$1"
-ARCH="$2"
-SHORT_VERSION=$(echo $VERSION | tr -d '.')
+SHORT_VERSION="$2"
+ARCH="$3"
 
 BUILD_DIR=./build
 
