@@ -33,9 +33,11 @@ AUTO_INSTALL_CONF=./auto_install.conf
 SITE_PACKAGE=$BUILD_DIR/site.tgz
 SITE_PACKAGE_SRC=./site_package
 PROFILE_INJECTION=./bsd_rd_profile_injection
+PASSPHRASE=./passphrase
 
 NECESSARY_FILES[0]=$AUTO_INSTALL_CONF
 NECESSARY_FILES[1]=$PROFILE_INJECTION
+NECESSARY_FILES[2]=$PASSPHRASE
 
 NECESSARY_DIRS[0]=$SITE_PACKAGE_SRC
 
@@ -100,6 +102,8 @@ modify_bsd_rd() {
 	cp $AUTO_INSTALL_CONF $BSD_RD_CUSTOM_MOUNT/ && \
 	cat $PROFILE_INJECTION $BSD_RD_CUSTOM_MOUNT/.profile > ./profile.tmp && \
 	cp ./profile.tmp $BSD_RD_CUSTOM_MOUNT/.profile && \
+	cp $PASSPHRASE $BSD_RD_CUSTOM_MOUNT/passphrase && \
+	chmod 600 $BSD_RD_CUSTOM_MOUNT/passphrase && \
 	rm ./profile.tmp && \
 	mkdir -p $BSD_RD_CUSTOM_MOUNT/$VERSION/$ARCH && \
 	cp $SITE_PACKAGE $BSD_RD_CUSTOM_MOUNT/$VERSION/$ARCH/site$SHORT_VERSION.tgz && \

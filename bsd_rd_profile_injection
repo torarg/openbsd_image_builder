@@ -1,14 +1,19 @@
-export GROWFS_STATUS=/growfs_done
 export GROWFS_DISK=sd0
 export GROWFS_PART=/dev/sd0a
-if [[ ! -f $GROWFS_STATUS ]]; then
-	old_pwd=$(pwd)
-	if [[ ! -f $GROWFS_PART ]]; then
-		cd /dev
-		sh ./MAKEDEV $GROWFS_DISK
-	fi
-	fdisk -iy $GROWFS_DISK
-	print 'b\n\n*\nw\n' | disklabel -E $GROWFS_DISK
-	echo "done" > $GROWFS_STATUS
-	cd $old_pwd
+old_pwd=$(pwd)
+if [[ ! -f $GROWFS_PART ]]; then
+	cd /dev
+	sh ./MAKEDEV $GROWFS_DISK
 fi
+fdisk -iy $GROWFS_DISK
+
+# grow disklabel area
+print 'b\n\n*\nw\n' | disklabel -E $GROWFS_DISK
+
+# prepare for disklabel for encryption with bioctl
+print 'd *\na\na\n\n*\nRAID\nw\n' | disklabel -E $GROWFS_DISK
+
+# encrypt disk
+bioctl -c C -p /passphrase -l $GROWFS_PART softraid0
+
+cd $old_pwd
