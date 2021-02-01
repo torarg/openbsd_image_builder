@@ -1,2 +1,6 @@
 #!/bin/sh
-/usr/sbin/pkg_add python3
+. /autoinstall_profile
+dd if=$KEYDISK_PART_RAW of=$KEYDISK_BACKUP bs=1M
+chown root $KEYDISK_BACKUP
+chmod 400 $KEYDISK_BACKUP
+/usr/sbin/pkg_add $INSTALL_PACKAGES

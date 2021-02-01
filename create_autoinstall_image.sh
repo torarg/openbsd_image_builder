@@ -1,17 +1,11 @@
 #!/bin/ksh
 
-USAGE="./build_autoinstall_image.sh VERSION SHORT_VERSION ARCH"
-
-[[ $# != 3 ]] && echo $USAGE && exit 1
-
-
-MIRROR=ftp.hostserver.de
-VERSION="$1"
-SHORT_VERSION="$2"
-ARCH="$3"
+AUTOINSTALL_PROFILE=./autoinstall_profile
+. $AUTOINSTALL_PROFILE
 
 BUILD_DIR=./build
 
+MIRROR=$OPENBSD_MIRROR
 BSD_RD=$BUILD_DIR/bsd.rd
 BSD_RD_CUSTOM=$BUILD_DIR/bsd.rd.custom
 BSD_RD_CUSTOM_MOUNT=$BUILD_DIR/bsd.rd.custom.mount
@@ -33,11 +27,10 @@ AUTO_INSTALL_CONF=./auto_install.conf
 SITE_PACKAGE=$BUILD_DIR/site.tgz
 SITE_PACKAGE_SRC=./site_package
 PROFILE_INJECTION=./bsd_rd_profile_injection
-PASSPHRASE=./passphrase
 
 NECESSARY_FILES[0]=$AUTO_INSTALL_CONF
 NECESSARY_FILES[1]=$PROFILE_INJECTION
-NECESSARY_FILES[2]=$PASSPHRASE
+NECESSARY_FILES[2]=$AUTOINSTALL_PROFILE
 
 NECESSARY_DIRS[0]=$SITE_PACKAGE_SRC
 
@@ -67,6 +60,27 @@ check_environment() {
 
 }
 
+template_auto_install_conf() {
+	target_file=$BSD_RD_CUSTOM_MOUNT/auto_install.conf
+	if [[ ! -f $target_file ]]; then
+		echo "$target file does not exist"
+		exit 1
+	fi
+
+	sed -i "s/{{ HOSTNAME }}/$HOSTNAME/g" $target_file
+	sed -i "s/{{ OPENBSD_MIRROR }}/$OPENBSD_MIRROR/g" $target_file
+	sed -i "s/{{ ARCH }}/$ARCH/g" $target_file
+	sed -i "s/{{ VERSION }}/$VERSION/g" $target_file
+	sed -i "s/{{ SHORT_VERSION }}/$SHORT_VERSION/g" $target_file
+	sed -i "s/{{ DHCP_INTERFACE }}/$DHCP_INTERFACE/g" $target_file
+	sed -i "s/{{ INSTALL_PACKAGES }}/$INSTALL_PACKAGES/g" $target_file
+	sed -i "s/{{ ENC_DISK }}/$ENC_DISK/g" $target_file
+	sed -i "s|{{ SSH_PUBLIC_KEY }}|$SSH_PUBLIC_KEY|g" $target_file
+
+	cp $target_file $BUILD_DIR/
+
+}
+
 create_directories() {
 	for directory in ${BUILD_DIRECTORIES[@]}; do
 		[[ ! -d $directory ]] && mkdir -p $directory
@@ -92,6 +106,7 @@ umount_image() {
 }
 
 build_site_package () {
+	cp $AUTOINSTALL_PROFILE $SITE_PACKAGE_SRC/
 	tar czf $SITE_PACKAGE -C $SITE_PACKAGE_SRC .
 }
 
@@ -99,11 +114,17 @@ modify_bsd_rd() {
 	cp $BSD_RD $BSD_RD_CUSTOM && \
 	rdsetroot -x $BSD_RD_CUSTOM $BSD_RD_CUSTOM_IMAGE && \
 	mount_image $BSD_RD_CUSTOM_IMAGE $BSD_RD_CUSTOM_MOUNT && \
+	cp $AUTOINSTALL_PROFILE $BSD_RD_CUSTOM_MOUNT/ && \
 	cp $AUTO_INSTALL_CONF $BSD_RD_CUSTOM_MOUNT/ && \
+	template_auto_install_conf && \
 	cat $PROFILE_INJECTION $BSD_RD_CUSTOM_MOUNT/.profile > ./profile.tmp && \
 	cp ./profile.tmp $BSD_RD_CUSTOM_MOUNT/.profile && \
-	cp $PASSPHRASE $BSD_RD_CUSTOM_MOUNT/passphrase && \
-	chmod 600 $BSD_RD_CUSTOM_MOUNT/passphrase && \
+	echo "$PASSPHRASE" > $BSD_RD_CUSTOM_MOUNT/passphrase && \
+	echo "$DATA_PART_PASSPHRASE" > $BSD_RD_CUSTOM_MOUNT/data_part_passphrase && \
+	chown root $BSD_RD_CUSTOM_MOUNT/passphrase && \
+	chown root $BSD_RD_CUSTOM_MOUNT/data_part_passphrase && \
+	chmod 0600 $BSD_RD_CUSTOM_MOUNT/passphrase && \
+	chmod 0600 $BSD_RD_CUSTOM_MOUNT/data_part_passphrase && \
 	rm ./profile.tmp && \
 	mkdir -p $BSD_RD_CUSTOM_MOUNT/$VERSION/$ARCH && \
 	cp $SITE_PACKAGE $BSD_RD_CUSTOM_MOUNT/$VERSION/$ARCH/site$SHORT_VERSION.tgz && \

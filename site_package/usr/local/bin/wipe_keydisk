@@ -1,0 +1,9 @@
+#!/bin/ksh
+. /autoinstall_profile
+
+# wipe keydisk partition with random data
+dd if=/dev/urandom of=$KEYDISK_PART_RAW bs=1M
+
+# restore partition table
+print "d *\na\n${KEYDISK_PART_CHAR}\n\n1M\nRAID\nw\n" | disklabel -E $KEYDISK
+print "a\n${DATA_PART_CHAR}\n\n*\n4.2BSD\nw\n" | disklabel -E $KEYDISK

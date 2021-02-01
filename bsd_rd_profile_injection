@@ -1,9 +1,4 @@
-GROWFS_DISK=sd0
-GROWFS_PART=/dev/sd0a
-
-KEYDISK=sd1
-KEYDISK_PART=/dev/sd1a
-USE_KEYDISK=yes
+. /autoinstall_profile
 
 rootdisk=$(dmesg | sed -E '/^root on ([^ ]+) .*$/h;$!d;g;s//\1/')
 mount -u /dev/${rootdisk:-rd0a} /
@@ -21,23 +16,31 @@ if [[ $USE_KEYDISK == "yes" ]]; then
 	cd /dev
 	sh ./MAKEDEV $KEYDISK
 	fdisk -iy $KEYDISK
-	print 'd *\na\na\n\n1M\nRAID\nw\n' | disklabel -E $KEYDISK
+	print "d *\na\n${KEYDISK_PART_CHAR}\n\n1M\nRAID\nw\n" | disklabel -E $KEYDISK
 fi
 
 fdisk -iy $GROWFS_DISK
 
 
 # grow disklabel area
-print 'b\n\n*\nw\n' | disklabel -E $GROWFS_DISK
+print "b\n\n*\nw\n" | disklabel -E $GROWFS_DISK
 
 # prepare for disklabel for encryption with bioctl
-print 'd *\na\na\n\n*\nRAID\nw\n' | disklabel -E $GROWFS_DISK
+print "d *\na\n${GORWFS_PART_CHAR}\n\n*\nRAID\nw\n" | disklabel -E $GROWFS_DISK
 
 # encrypt disk
 if [[ $USE_KEYDISK == "no" ]]; then
 	bioctl -c C -p /passphrase -l $GROWFS_PART softraid0
 elif [[ $USE_KEYDISK == "yes" ]]; then
 	bioctl -c C -k $KEYDISK_PART -l $GROWFS_PART softraid0
+	if [[ $CREATE_DATA_PART == "yes" ]]; then
+		print "a\n${DATA_PART_CHAR}\n\n*\nRAID\nw\n" | disklabel -E $KEYDISK
+		bioctl -c C -p /data_part_passphrase -l $DATA_PART softraid0
+		cd /dev
+		sh ./MAKEDEV $ENC_DATA_DISK
+		print "a\na\n\n*\n4.2BSD\nw\n" | disklabel -E $ENC_DATA_DISK
+		newfs ${ENC_DATA_DISK}a
+	fi
 fi
 
 cd $old_pwd

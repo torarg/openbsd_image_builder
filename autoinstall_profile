@@ -1,0 +1,47 @@
+# DISK SETUP
+# rootdisk that will be encrypted and grown to fit actual hard drive
+GROWFS_DISK=sd0
+
+USE_KEYDISK=yes # if no passphrase will be used
+KEYDISK=sd1 # keydisk
+# only used when USED_KEYDISK=no
+PASSPHRASE="SomePassphrase"
+# keydisk backup image destination (will be created on first boot)
+KEYDISK_BACKUP=/keydisk
+# encrypted rootdisk
+ENC_DISK=sd2
+
+# remaining keydisk space can be used to create a 4.2BSD disklabel with ffs formatted
+CREATE_DATA_PART=yes
+DATA_PART_PASSPHRASE="SomePassphrase"
+ENC_DATA_DISK=sd3
+
+
+# INSTALL SETUP
+# packages to install on first boot. seperated by space
+HOSTNAME=openbsd
+OPENBSD_MIRROR=ftp.hostserver.de
+ARCH=amd64
+VERSION=6.8
+SHORT_VERSION=68
+DHCP_INTERFACE=vio0
+INSTALL_PACKAGES="python3"
+SSH_PUBLIC_KEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDW0Zeqh/S1f9W2mvjsY7J1kZEw6/2z2HKOJLsqMn4rWcH4EWCQLuuCQrm1m8EhVoh7ol9u6HsSbJ5TIjyQEa9bOmEWZ40qo3KZ7DjCWZI1x0ujGL3u6ETdgj7Bfc8gquX7VBjeZmWQTO8uDVkTHY7B0tMsPiaLdsh2LaIUvXMxc/Tbg36GJm3nDIcWNBkRq+XpwULnxRqy/mwbYwi6HsKxHKL2c5LOboaCEgrmLabuRL5Wazw04QFKkdIGOQG2DVeQJAw9KKp7ViNtIbaeylHl4ByecoRpskV1RvpozHFWbZJm+WUon+vyzjTi5SkK2cozGWuIoooHXwC+C8Kul7h michaelwilson@Michaels-iMac.lan"
+
+
+
+################################
+# derived values (do not edit) #
+################################
+GROWFS_PART_NAME=${GROWFS_DISK}a
+GROWFS_PART=/dev/$GROWFS_PART_NAME
+GROWFS_PART_CHAR=${GROWFS_PART_NAME##${GROWFS_PART_NAME%%?}} # extract last char of part name 
+
+KEYDISK_PART_NAME=${KEYDISK}a
+KEYDISK_PART_CHAR=${KEYDISK_PART_NAME##${KEYDISK_PART_NAME%%?}} # extract last char of part name 
+KEYDISK_PART=/dev/$KEYDISK_PART_NAME
+KEYDISK_PART_RAW=/dev/r$KEYDISK_PART_NAME
+
+DATA_PART_NAME=${KEYDISK}d
+DATA_PART=/dev/$DATA_PART_NAME
+DATA_PART_CHAR=${DATA_PART_NAME##${DATA_PART_NAME%%?}} # extract last char of part name 
