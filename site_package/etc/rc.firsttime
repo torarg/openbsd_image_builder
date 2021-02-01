@@ -1,6 +1,7 @@
 #!/bin/sh
 . /autoinstall_profile
 dd if=$KEYDISK_PART_RAW of=$KEYDISK_BACKUP bs=1M
+dd if=$DATA_PART_KEYDISK_PART_RAW of=$DATA_PART_KEYDISK_BACKUP bs=1M
 chown root $KEYDISK_BACKUP
 chmod 400 $KEYDISK_BACKUP
 /usr/sbin/pkg_add $INSTALL_PACKAGES

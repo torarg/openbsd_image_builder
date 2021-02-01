@@ -4,15 +4,13 @@ GROWFS_DISK=sd0
 
 USE_KEYDISK=yes # if no passphrase will be used
 KEYDISK=sd1 # keydisk
-# only used when USED_KEYDISK=no
-PASSPHRASE="SomePassphrase"
-# keydisk backup image destination (will be created on first boot)
-KEYDISK_BACKUP=/keydisk
-# encrypted rootdisk
+PASSPHRASE="SomePassphrase" # only used when USED_KEYDISK=no
+KEYDISK_BACKUP=/keydisk 
 ENC_DISK=sd2
 
 # remaining keydisk space can be used to create a 4.2BSD disklabel with ffs formatted
 CREATE_DATA_PART=yes
+DATA_PART_KEYDISK_BACKUP=/data_keydisk
 DATA_PART_PASSPHRASE="SomePassphrase"
 ENC_DATA_DISK=sd3
 
@@ -45,3 +43,8 @@ KEYDISK_PART_RAW=/dev/r$KEYDISK_PART_NAME
 DATA_PART_NAME=${KEYDISK}d
 DATA_PART=/dev/$DATA_PART_NAME
 DATA_PART_CHAR=${DATA_PART_NAME##${DATA_PART_NAME%%?}} # extract last char of part name 
+
+DATA_PART_KEYDISK_PART_NAME=${KEYDISK}b
+DATA_PART_KEYDISK_PART_CHAR=${DATA_PART_KEYDISK_PART_NAME##${DATA_PART_KEYDISK_PART_NAME%%?}} # extract last char of part name 
+DATA_PART_KEYDISK_PART=/dev/$DATA_PART_KEYDISK_PART_NAME
+DATA_PART_KEYDISK_PART_RAW=/dev/r$DATA_PART_KEYDISK_PART_NAME

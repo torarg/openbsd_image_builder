@@ -34,8 +34,9 @@ if [[ $USE_KEYDISK == "no" ]]; then
 elif [[ $USE_KEYDISK == "yes" ]]; then
 	bioctl -c C -k $KEYDISK_PART -l $GROWFS_PART softraid0
 	if [[ $CREATE_DATA_PART == "yes" ]]; then
+		print "a\n${DATA_PART_KEYDISK_PART_CHAR}\n\n1M\nRAID\nw\n" | disklabel -E $KEYDISK
 		print "a\n${DATA_PART_CHAR}\n\n*\nRAID\nw\n" | disklabel -E $KEYDISK
-		bioctl -c C -p /data_part_passphrase -l $DATA_PART softraid0
+		bioctl -c C -k $DATA_PART_KEYDISK_PART -l $DATA_PART softraid0
 		cd /dev
 		sh ./MAKEDEV $ENC_DATA_DISK
 		print "a\na\n\n*\n4.2BSD\nw\n" | disklabel -E $ENC_DATA_DISK
