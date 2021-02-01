@@ -1,6 +1,7 @@
 # build an openbsd autoinstall image
 
 ## description
+
 a small helper script to create a bootable openbsd disk image
 with customized ramdisk kernel which contains:
 
@@ -15,12 +16,14 @@ prepare the host for an openbsd autoinstall.
 please be aware that the defaults in this project are only tested with hetzner cloud's
 linux64 rescue system. 
 
-also the auto_install.conf currently contains a ssh pubkey you will probably need to change
+the current default setup creates a ready to install openbsd image which will
+do an autoinstall on boot. the root device will be encrypted either by passphrase or keydisk.
 
 ## requirements
 - openbsd host
 - auto_install.conf
 - site_package/
+- autoinstall_profile
 
 ## steps
 
@@ -40,4 +43,6 @@ also the auto_install.conf currently contains a ssh pubkey you will probably nee
 
 ## usage
 
-./create_autoinstall_image.sh VERSION ARCH
+1. edit ``autoinstall_profile`` according to your needs
+
+2. run ``./create_autoinstall_image.sh`` as ``root``
