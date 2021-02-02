@@ -1,3 +1,9 @@
 #!/bin/ksh
+. /autoinstall_profile
+if [[ ! -f $KEYDISK_BACKUP || ! -f $DATA_PART_KEYDISK_BACKUP ]]; then
+	echo "error: keydisk backups missing"
+	exit 1
+fi
+
 dd if=$KEYDISK_BACKUP of=$KEYDISK_PART_RAW bs=1M
 dd if=$DATA_PART_KEYDISK_BACKUP of=$DATA_PART_KEYDISK_PART_RAW bs=1M
