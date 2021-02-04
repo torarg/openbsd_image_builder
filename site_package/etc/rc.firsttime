@@ -1,7 +1,16 @@
 #!/bin/sh
 . /autoinstall_profile
-dd if=$KEYDISK_PART_RAW of=$KEYDISK_BACKUP bs=1M
-dd if=$DATA_PART_KEYDISK_PART_RAW of=$DATA_PART_KEYDISK_BACKUP bs=1M
-chown root $KEYDISK_BACKUP
-chmod 400 $KEYDISK_BACKUP
+if [ $USE_KEYDISK == "yes" && -f $KEYDISK_PART ]; then
+    dd if=$KEYDISK_PART_RAW of=$KEYDISK_BACKUP bs=1M
+    chown root $KEYDISK_BACKUP
+    chmod 400 $KEYDISK_BACKUP
+fi
+
+if [ $CREATE_DATA_PART == "yes" && -f $DATA_PART ]; then
+    dd if=$DATA_PART_KEYDISK_PART_RAW of=$DATA_PART_KEYDISK_BACKUP bs=1M
+    echo "$DATA_PART /mnt ffs rw,nodev,nosuid 1 2" >> /etc/fstab
+    chown root $DATA_PART_KEYDISK_BACKUP
+    chmod 400 $DATA_PART_KEYDISK_BACKUP
+fi
+
 /usr/sbin/pkg_add $INSTALL_PACKAGES
