@@ -1,14 +1,16 @@
 #!/bin/sh
 . /autoinstall_profile
-if [ $USE_KEYDISK == "yes" && -f $KEYDISK_PART ]; then
+
+if [ $USE_KEYDISK == "yes" ] && [ -b $KEYDISK_PART ]; then
     dd if=$KEYDISK_PART_RAW of=$KEYDISK_BACKUP bs=1M
     chown root $KEYDISK_BACKUP
     chmod 400 $KEYDISK_BACKUP
 fi
 
-if [ $CREATE_DATA_PART == "yes" && -f $DATA_PART ]; then
+if [ $CREATE_DATA_PART == "yes" ] && [ -b $ENC_DATA_PART ]; then
     dd if=$DATA_PART_KEYDISK_PART_RAW of=$DATA_PART_KEYDISK_BACKUP bs=1M
-    echo "$DATA_PART /mnt ffs rw,nodev,nosuid 1 2" >> /etc/fstab
+    echo "$ENC_DATA_PART /mnt ffs rw,nodev,nosuid 1 2" >> /etc/fstab
+    mount /mnt
     chown root $DATA_PART_KEYDISK_BACKUP
     chmod 400 $DATA_PART_KEYDISK_BACKUP
 fi
