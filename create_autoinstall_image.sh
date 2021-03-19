@@ -88,7 +88,8 @@ create_directories() {
 }
 
 download_bsd_rd() {
-	ftp -o $BSD_RD $BSD_RD_URL
+	ftp -o $BSD_RD.gz $BSD_RD_URL
+	gunzip $BSD_RD.gz -o $BSD_RD
 	[[ $? != 0 ]] && echo "Failed to download: $BSD_RD_URL" && exit 1
 }
 
