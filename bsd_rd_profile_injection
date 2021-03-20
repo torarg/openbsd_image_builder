@@ -22,25 +22,29 @@ fi
 fdisk -iy $GROWFS_DISK
 
 
-# grow disklabel area
-print "b\n\n*\nw\n" | disklabel -E $GROWFS_DISK
+if [[ $GROW_ROOT_DISK == "true" ]]; then
+	# grow disklabel area
+	print "b\n\n*\nw\n" | disklabel -E $GROWFS_DISK
+fi
 
-# prepare for disklabel for encryption with bioctl
-print "d *\na\n${GORWFS_PART_CHAR}\n\n*\nRAID\nw\n" | disklabel -E $GROWFS_DISK
+if [[ $DISK_ENCRYPTION ]]; then
+	# prepare for disklabel for encryption with bioctl
+	print "d *\na\n${GORWFS_PART_CHAR}\n\n*\nRAID\nw\n" | disklabel -E $GROWFS_DISK
 
-# encrypt disk
-if [[ $USE_KEYDISK == "no" ]]; then
-	bioctl -c C -p /passphrase -l $GROWFS_PART softraid0
-elif [[ $USE_KEYDISK == "yes" ]]; then
-	bioctl -c C -k $KEYDISK_PART -l $GROWFS_PART softraid0
-	if [[ $CREATE_DATA_PART == "yes" ]]; then
-		print "a\n${DATA_PART_KEYDISK_PART_CHAR}\n\n1M\nRAID\nw\n" | disklabel -E $KEYDISK
-		print "a\n${DATA_PART_CHAR}\n\n*\nRAID\nw\n" | disklabel -E $KEYDISK
-		bioctl -c C -k $DATA_PART_KEYDISK_PART -l $DATA_PART softraid0
-		cd /dev
-		sh ./MAKEDEV $ENC_DATA_DISK
-		print "a\na\n\n*\n4.2BSD\nw\n" | disklabel -E $ENC_DATA_DISK
-		newfs ${ENC_DATA_DISK}a
+	# encrypt disk
+	if [[ $USE_KEYDISK == "no" ]]; then
+		bioctl -c C -p /passphrase -l $GROWFS_PART softraid0
+	elif [[ $USE_KEYDISK == "yes" ]]; then
+		bioctl -c C -k $KEYDISK_PART -l $GROWFS_PART softraid0
+		if [[ $CREATE_DATA_PART == "yes" ]]; then
+			print "a\n${DATA_PART_KEYDISK_PART_CHAR}\n\n1M\nRAID\nw\n" | disklabel -E $KEYDISK
+			print "a\n${DATA_PART_CHAR}\n\n*\nRAID\nw\n" | disklabel -E $KEYDISK
+			bioctl -c C -k $DATA_PART_KEYDISK_PART -l $DATA_PART softraid0
+			cd /dev
+			sh ./MAKEDEV $ENC_DATA_DISK
+			print "a\na\n\n*\n4.2BSD\nw\n" | disklabel -E $ENC_DATA_DISK
+			newfs ${ENC_DATA_DISK}a
+		fi
 	fi
 fi
 
