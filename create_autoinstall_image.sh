@@ -60,6 +60,13 @@ check_environment() {
 
 }
 
+check_arguments() {
+	if [[ $# != 1 ]]; then
+		echo "./$(basename $0) HOSTNAME"
+		exit 1
+	fi
+}
+
 template_auto_install_conf() {
 	target_file=$BSD_RD_CUSTOM_MOUNT/auto_install.conf
 	if [[ ! -f $target_file ]]; then
@@ -152,6 +159,8 @@ create_image() {
 	gzip -c9n $IMAGE > $IMAGE_GZ
 }
 
+check_arguments $@
+HOSTNAME="$1"
 check_environment 
 create_directories 
 download_bsd_rd 

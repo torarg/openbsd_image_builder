@@ -19,7 +19,6 @@ ENC_DATA_DISK=sd3
 
 
 # INSTALL SETUP
-HOSTNAME=openbsd
 OPENBSD_MIRROR=ftp.hostserver.de
 ARCH=amd64
 VERSION=snapshots
