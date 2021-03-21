@@ -12,14 +12,14 @@ KEYDISK_BACKUP=/keydisk
 ENC_DISK=sd2
 
 # remaining keydisk space can be used to create a 4.2BSD disklabel with ffs formatted
-CREATE_DATA_PART=yes
+CREATE_DATA_PART=no
 DATA_PART_KEYDISK_BACKUP=/data_keydisk
 DATA_PART_PASSPHRASE="SomePassphrase"
 ENC_DATA_DISK=sd3
 
 
 # INSTALL SETUP
-OPENBSD_MIRROR=www.1wilson.org
+OPENBSD_MIRROR=ftp.hostserver.de
 ARCH=amd64
 VERSION=snapshots
 SHORT_VERSION=69
