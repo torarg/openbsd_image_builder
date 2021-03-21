@@ -1,11 +1,11 @@
 # DISK SETUP
 DISK_ENCRYPTION=false
-GROW_ROOT_DISK=false
+GROW_ROOT_DISK=true
 
 # rootdisk that will be encrypted and grown to fit actual hard drive
 ROOT_DISK=sd0
 
-USE_KEYDISK=yes # if no passphrase will be used
+USE_KEYDISK=no # if no passphrase will be used
 KEYDISK=sd1 # keydisk
 PASSPHRASE="SomePassphrase" # only used when USED_KEYDISK=no
 KEYDISK_BACKUP=/keydisk 
@@ -19,7 +19,7 @@ ENC_DATA_DISK=sd3
 
 
 # INSTALL SETUP
-OPENBSD_MIRROR=ftp.hostserver.de
+OPENBSD_MIRROR=www.1wilson.org
 ARCH=amd64
 VERSION=snapshots
 SHORT_VERSION=69

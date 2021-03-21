@@ -27,7 +27,7 @@ if [[ $GROW_ROOT_DISK == "true" ]]; then
 	print "b\n\n*\nw\n" | disklabel -E $GROWFS_DISK
 fi
 
-if [[ $DISK_ENCRYPTION ]]; then
+if [[ $DISK_ENCRYPTION == "true" ]]; then
 	# prepare for disklabel for encryption with bioctl
 	print "d *\na\n${GORWFS_PART_CHAR}\n\n*\nRAID\nw\n" | disklabel -E $GROWFS_DISK
 

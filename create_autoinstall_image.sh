@@ -82,6 +82,7 @@ template_auto_install_conf() {
 	sed -i "s/{{ DHCP_INTERFACE }}/$DHCP_INTERFACE/g" $target_file
 	sed -i "s/{{ INSTALL_PACKAGES }}/$INSTALL_PACKAGES/g" $target_file
 	sed -i "s/{{ ENC_DISK }}/$ENC_DISK/g" $target_file
+	sed -i "s/{{ ROOT_DISK }}/$ROOT_DISK/g" $target_file
 	sed -i "s|{{ SSH_PUBLIC_KEY }}|$SSH_PUBLIC_KEY|g" $target_file
 
 	cp $target_file $BUILD_DIR/
