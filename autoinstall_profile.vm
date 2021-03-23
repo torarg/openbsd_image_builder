@@ -1,0 +1,57 @@
+# DISK SETUP
+DISK_ENCRYPTION=false
+GROW_ROOT_DISK=true
+USE_KEYDISK=no  # if no passphrase will be used
+CREATE_DATA_PART=no
+
+# rootdisk that will be encrypted and grown to fit actual hard drive
+ROOT_DISK=sd0
+
+KEYDISK=sd1 # keydisk
+PASSPHRASE="SomePassphrase" # only used when USED_KEYDISK=no
+KEYDISK_BACKUP=/keydisk 
+ENC_DISK=sd2
+
+# remaining keydisk space can be used to create a 4.2BSD disklabel with ffs formatted
+DATA_PART_KEYDISK_BACKUP=/data_keydisk
+DATA_PART_PASSPHRASE="SomePassphrase"
+ENC_DATA_DISK=sd3
+
+
+# INSTALL SETUP
+OPENBSD_MIRROR=ftp.hostserver.de
+ARCH=amd64
+VERSION=snapshots
+SHORT_VERSION=69
+DHCP_INTERFACE=vio0
+INSTALL_PACKAGES="python-3.8.8"
+SSH_PUBLIC_KEY="$(cat /home/mw/.ssh/id_rsa.pub.mw)"
+
+
+
+################################
+# derived values (do not edit) #
+################################
+GROWFS_DISK=$ROOT_DISK
+if [[ $DISK_ENCRYPTION == "true" ]]; then
+	ROOT_DISK=$ENC_DISK
+fi
+GROWFS_PART_NAME=${GROWFS_DISK}a
+GROWFS_PART=/dev/$GROWFS_PART_NAME
+GROWFS_PART_CHAR=${GROWFS_PART_NAME##${GROWFS_PART_NAME%%?}} # extract last char of part name 
+
+KEYDISK_PART_NAME=${KEYDISK}a
+KEYDISK_PART_CHAR=${KEYDISK_PART_NAME##${KEYDISK_PART_NAME%%?}} # extract last char of part name 
+KEYDISK_PART=/dev/$KEYDISK_PART_NAME
+KEYDISK_PART_RAW=/dev/r$KEYDISK_PART_NAME
+
+DATA_PART_NAME=${KEYDISK}d
+DATA_PART=/dev/$DATA_PART_NAME
+DATA_PART_CHAR=${DATA_PART_NAME##${DATA_PART_NAME%%?}} # extract last char of part name 
+
+DATA_PART_KEYDISK_PART_NAME=${KEYDISK}b
+DATA_PART_KEYDISK_PART_CHAR=${DATA_PART_KEYDISK_PART_NAME##${DATA_PART_KEYDISK_PART_NAME%%?}} # extract last char of part name 
+DATA_PART_KEYDISK_PART=/dev/$DATA_PART_KEYDISK_PART_NAME
+DATA_PART_KEYDISK_PART_RAW=/dev/r$DATA_PART_KEYDISK_PART_NAME
+
+ENC_DATA_PART=/dev/${ENC_DATA_DISK}a
