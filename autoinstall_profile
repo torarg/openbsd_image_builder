@@ -1,18 +1,18 @@
 # DISK SETUP
 DISK_ENCRYPTION=false
 GROW_ROOT_DISK=true
+USE_KEYDISK=no  # if no passphrase will be used
+CREATE_DATA_PART=no
 
 # rootdisk that will be encrypted and grown to fit actual hard drive
 ROOT_DISK=sd0
 
-USE_KEYDISK=no # if no passphrase will be used
 KEYDISK=sd1 # keydisk
 PASSPHRASE="SomePassphrase" # only used when USED_KEYDISK=no
 KEYDISK_BACKUP=/keydisk 
 ENC_DISK=sd2
 
 # remaining keydisk space can be used to create a 4.2BSD disklabel with ffs formatted
-CREATE_DATA_PART=no
 DATA_PART_KEYDISK_BACKUP=/data_keydisk
 DATA_PART_PASSPHRASE="SomePassphrase"
 ENC_DATA_DISK=sd3
@@ -25,7 +25,7 @@ VERSION=snapshots
 SHORT_VERSION=69
 DHCP_INTERFACE=vio0
 INSTALL_PACKAGES="python-3.8.8"
-SSH_PUBLIC_KEY="$(cat ~/id_rsa.pub)"
+SSH_PUBLIC_KEY="$(cat /home/mw/.ssh/id_rsa.pub.mw)"
 
 
 
