@@ -24,7 +24,7 @@ ARCH=amd64
 VERSION=snapshots
 SHORT_VERSION=70
 DHCP_INTERFACE=vio0
-INSTALL_PACKAGES="python-3.9"
+INSTALL_PACKAGES="python3"
 SSH_PUBLIC_KEY="$(cat /home/mw/.ssh/id_rsa.pub.mw)"
 
 
