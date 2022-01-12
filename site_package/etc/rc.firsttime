@@ -18,3 +18,5 @@ fi
 /usr/sbin/pkg_add $INSTALL_PACKAGES
 ln -s /usr/local/bin/python3.8 /usr/local/bin/python
 ln -s /usr/local/bin/python3.8 /usr/local/bin/python3
+
+sed 's/ffs rw/ffs rw,softdep/g' /etc/fstab
