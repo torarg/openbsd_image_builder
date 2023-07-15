@@ -22,9 +22,9 @@ ENC_DATA_DISK=sd3
 OPENBSD_MIRROR=ftp.hostserver.de
 ARCH=amd64
 VERSION=snapshots
-SHORT_VERSION=70
+SHORT_VERSION=73
 DHCP_INTERFACE=vio0
-INSTALL_PACKAGES="python3"
+INSTALL_PACKAGES="python3--"
 SSH_PUBLIC_KEY="$(cat /home/mw/.ssh/id_rsa.pub.mw)"
 
 
