@@ -24,6 +24,7 @@ fdisk -iy $GROWFS_DISK
 
 if [[ $GROW_ROOT_DISK == "true" ]]; then
 	# grow disklabel area
+	echo "Growing root disk."
 	print "b\n\n*\nw\n" | disklabel -E $GROWFS_DISK
 fi
 
