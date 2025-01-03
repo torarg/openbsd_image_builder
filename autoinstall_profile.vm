@@ -24,7 +24,7 @@ ARCH=amd64
 VERSION=snapshots
 SHORT_VERSION=76
 DHCP_INTERFACE=vio0
-INSTALL_PACKAGES="python3--"
+INSTALL_PACKAGES="python--"
 SSH_PUBLIC_KEY="$(cat /home/mw/.ssh/id_ed25519.pub-ansible)"
 
 
