@@ -19,10 +19,10 @@ ENC_DATA_DISK=sd3
 
 
 # INSTALL SETUP
-OPENBSD_MIRROR=packages.1wilson.org
+OPENBSD_MIRROR=ftp.spline.de
 ARCH=amd64
 VERSION=snapshots
-SHORT_VERSION=75
+SHORT_VERSION=76
 DHCP_INTERFACE=vio0
 INSTALL_PACKAGES="python3--"
 SSH_PUBLIC_KEY="$(cat /home/mw/.ssh/id_ed25519.pub-ansible)"
